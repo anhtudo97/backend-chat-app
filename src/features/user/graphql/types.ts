@@ -51,7 +51,7 @@ export class UserUpdate {
 }
 
 @ArgsType()
-export class GerUserArgs {
+export class GetUserArgs {
   @Field({ nullable: true })
   id?: string;
   @Field({ nullable: true })
