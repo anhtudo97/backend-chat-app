@@ -3,10 +3,10 @@ import {
   InputType,
   Int,
   ObjectType,
-  registerEnumType,
+  registerEnumType
 } from "type-graphql";
-import { User } from "../../user/graphql/types";
-import { FileUpload, GraphQLUpload } from "graphql-upload";
+import {User} from "../../user/graphql/types";
+import {FileUpload, GraphQLUpload} from "graphql-upload";
 
 @ObjectType()
 export class Conversation {
@@ -27,11 +27,11 @@ export class Conversation {
 }
 
 export enum ConversationType {
-  ONE_TO_ONE = "ONE_TO_ONE",
-  GROUP = "GROUP",
+  ONE_TO_ONE = 'ONE_TO_ONE',
+  GROUP = 'GROUP'
 }
 
-registerEnumType(ConversationType, { name: "ConversationType" });
+registerEnumType(ConversationType, {name: 'ConversationType'});
 
 @ObjectType()
 export class Message {
@@ -44,10 +44,10 @@ export class Message {
   @Field()
   senderID!: string;
 
-  @Field({ nullable: true })
+  @Field({nullable: true})
   text?: string;
 
-  @Field(() => [Media], { nullable: true })
+  @Field(() => [Media], {nullable: true})
   medias!: Media[];
 
   @Field()
@@ -76,7 +76,7 @@ export class Media {
   @Field()
   url!: string;
 
-  @Field({ nullable: true })
+  @Field({nullable: true})
   thumbUrl?: string;
 }
 
@@ -85,13 +85,13 @@ export enum MediaType {
   VIDEO = "VIDEO",
 }
 
-registerEnumType(MediaType, { name: "MediaType" });
+registerEnumType(MediaType, {name: 'MediaType'});
 
 @ObjectType()
 export class MessageSub {
   @Field(() => Message)
   message!: Message;
-  @Field({ nullable: true })
+  @Field({nullable: true})
   update?: boolean;
 }
 
@@ -100,10 +100,10 @@ export class SendMessageInput {
   @Field(() => Int)
   conversationID!: number;
 
-  @Field({ nullable: true })
+  @Field({nullable: true})
   text?: string;
 
-  @Field(() => [GraphQLUpload], { nullable: true })
+  @Field(() => [GraphQLUpload], {nullable: true})
   medias?: Promise<FileUpload>[];
 }
 
