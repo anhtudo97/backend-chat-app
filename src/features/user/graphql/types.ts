@@ -1,5 +1,5 @@
-import { ArgsType, Field, InputType, ObjectType } from "type-graphql";
-import { FileUpload, GraphQLUpload } from "graphql-upload";
+import {ArgsType, Field, InputType, ObjectType} from "type-graphql";
+import {FileUpload, GraphQLUpload} from "graphql-upload";
 
 @ObjectType()
 export class User {
@@ -7,13 +7,13 @@ export class User {
   id!: string;
   @Field()
   username!: string;
-  @Field({ nullable: true })
+  @Field({nullable: true})
   name?: string;
-  @Field({ nullable: true })
+  @Field({nullable: true})
   photoURLSource?: string;
-  @Field({ nullable: true })
+  @Field({nullable: true})
   photoURLMedium?: string;
-  @Field({ nullable: true })
+  @Field({nullable: true})
   photoURLSmall?: string;
 }
 
@@ -30,30 +30,30 @@ export class Me {
 export class UserCreation {
   @Field()
   username!: string;
-  @Field({ nullable: true })
+  @Field({nullable: true})
   name?: string;
-  @Field(() => GraphQLUpload, { nullable: true })
+  @Field(() => GraphQLUpload, {nullable: true})
   photo?: Promise<FileUpload>;
 }
 
 @InputType()
 export class UserUpdate {
-  @Field({ nullable: true })
+  @Field({nullable: true})
   username?: string;
-  @Field({ nullable: true })
+  @Field({nullable: true})
   name?: string;
-  @Field({ nullable: true })
+  @Field({nullable: true})
   deleteName?: Boolean;
-  @Field(() => GraphQLUpload, { nullable: true })
+  @Field(() => GraphQLUpload, {nullable: true})
   photo?: Promise<FileUpload>;
-  @Field({ nullable: true })
+  @Field({nullable: true})
   deletePhoto?: Boolean;
 }
 
 @ArgsType()
-export class GetUserArgs {
-  @Field({ nullable: true })
+export class GerUserArgs {
+  @Field({nullable: true})
   id?: string;
-  @Field({ nullable: true })
+  @Field({nullable: true})
   username?: string;
 }
