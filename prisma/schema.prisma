@@ -1,0 +1,168 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model AuthUser {
+  id                 String         @id @default(uuid())
+  email              String         @unique
+  user               User?
+  friends1           Friend[]       @relation(name: "friends1")
+  friends2           Friend[]       @relation(name: "friends2")
+  blockings          Block[]        @relation(name: "blocking")
+  blockeds           Block[]        @relation(name: "blocked")
+  notifications      Notification[] @relation(name: "notification_owner")
+  notificationFriend Notification[] @relation(name: "notification_friend")
+  conversations      Conversation[]
+  deliveries         Delivery[]
+
+  @@map("auth_users")
+  Badge   Badge[]
+  Message Message[]
+}
+
+model User {
+  username       String   @unique
+  name           String?
+  photoURLSource String?  @map("photo_url_source")
+  photoURLMedium String?  @map("photo_url_medium")
+  photoURLSmall  String?  @map("photo_url_small")
+  activeStatus   Boolean  @default(true)
+  lastSeen       DateTime @updatedAt @map("last_seen")
+  authUser       AuthUser @relation(fields: [authUserID], references: [id])
+  authUserID     String   @unique @map("auth_user")
+
+  @@map("users")
+}
+
+model Friend {
+  id        Int      @id @default(autoincrement())
+  user1     AuthUser @relation(name: "friends1", fields: [user1ID], references: [id])
+  user1ID   String   @map("user1_id")
+  user2     AuthUser @relation(name: "friends2", fields: [user2ID], references: [id])
+  user2ID   String   @map("user2_id")
+  confirmed Boolean  @default(false)
+  date      DateTime @updatedAt
+
+  @@unique([user1ID, user2ID])
+  @@map("friends")
+}
+
+model Block {
+  id         Int      @id @default(autoincrement())
+  blocking   AuthUser @relation(name: "blocking", fields: [blockingID], references: [id])
+  blockingID String   @map("blocking_id")
+  blocked    AuthUser @relation(name: "blocked", fields: [blockedID], references: [id])
+  blockedID  String   @map("blocked_id")
+  date       DateTime @updatedAt
+
+  @@unique([blockingID, blockedID])
+  @@map("blocks")
+}
+
+model Notification {
+  id       Int              @id @default(autoincrement())
+  owner    AuthUser         @relation(name: "notification_owner", fields: [ownerID], references: [id])
+  ownerID  String
+  type     NotificationType
+  date     DateTime
+  seen     Boolean          @default(false)
+  // If the type is REQUEST_ACCEPTED
+  friend   AuthUser?        @relation(name: "notification_friend", fields: [friendID], references: [id])
+  friendID String?
+
+  @@unique([id, ownerID])
+  @@map("notifications")
+}
+
+enum NotificationType {
+  REQUEST_ACCEPTED
+  SYSTEM
+}
+
+model Badge {
+  user       AuthUser  @relation(fields: [userID], references: [id])
+  userID     String
+  badgeName  BadgeName
+  lastOpened DateTime
+
+  @@unique([userID, badgeName])
+  @@map("badges")
+}
+
+enum BadgeName {
+  NOTIFICATIONS
+  FRIEND_REQUESTS
+}
+
+// Chat
+
+model Conversation {
+  id           Int              @id @default(autoincrement())
+  participants AuthUser[]
+  messages     Message[]
+  type         ConversationType
+  updatedAt    DateTime         @updatedAt
+  createdAt    DateTime         @default(now())
+
+  @@map("conversations")
+}
+
+enum ConversationType {
+  ONE_TO_ONE
+  GROUP
+}
+
+model Message {
+  id             Int          @id @default(autoincrement())
+  sender         AuthUser     @relation(fields: [senderID], references: [id])
+  senderID       String
+  conversation   Conversation @relation(fields: [conversationID], references: [id])
+  conversationID Int
+  text           String?
+  medias         Media[]
+  sentAt         DateTime     @default(now())
+  deliveries     Delivery[]
+
+  @@map("messages")
+}
+
+model Media {
+  id        Int       @id @default(autoincrement())
+  message   Message   @relation(fields: [messageID], references: [id])
+  messageID Int
+  type      MediaType
+  url       String
+  thumbUrl  String?
+
+  @@map("medias")
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+}
+
+model Delivery {
+  message   Message      @relation(fields: [messageID], references: [id])
+  messageID Int
+  authUser  AuthUser     @relation(fields: [userID], references: [id])
+  userID    String
+  type      DeliveryType
+  date      DateTime     @default(now())
+
+  @@unique([messageID, userID, type])
+  @@map("deliveries")
+}
+
+enum DeliveryType {
+  DELIVERED
+  SEEN
+}
