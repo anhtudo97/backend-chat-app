@@ -1,9 +1,9 @@
 const TYPES = {
-  ToolBox: Symbol("toolbox"),
+  ToolBox: Symbol("ToolBox"),
   GoogleAPI: Symbol("GoogleAPI"),
   signer: Symbol("signer"),
   Tokens: Symbol("Tokens"),
-  PrismaCLient: Symbol("PrismaCLient"),
+  PrismaClient: Symbol("PrismaClient"),
   Axios: Symbol("Axios"),
   Storage: Symbol("Storage"),
   AuthDataSource: Symbol("AuthDataSource"),
