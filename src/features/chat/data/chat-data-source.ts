@@ -84,7 +84,7 @@ export default class ChatDataSource {
       orderBy: { updatedAt: "desc" },
     });
     return conversations
-      .map((c: Conversation) => ChatDataSource._getConversation(c, userID))
+      .map((c) => ChatDataSource._getConversation(c, userID))
       .sort((c1: Conversation, c2: Conversation) => {
         const lm1 = c1.messages[c1.messages.length - 1];
         const lm2 = c2.messages[c2.messages.length - 1];
@@ -133,8 +133,8 @@ export default class ChatDataSource {
     if (conversations.length) {
       return {
         id: conversations[0].id,
-        type: conversations[0].type,
-        participantsIDs: conversations[0].participants.map((p: User) => p.id),
+        type: ConversationType[conversations[0].type],
+        participantsIDs: conversations[0].participants.map((p) => p.id),
       };
     }
     return null;
@@ -160,12 +160,9 @@ export default class ChatDataSource {
         },
       },
     });
-    const messagesIDs: number[] = result.reduce(
-      (ids: number[], conv: Conversation) => {
-        return [...ids, ...conv.messages.map((m) => m.id)];
-      },
-      []
-    );
+    const messagesIDs: number[] = result.reduce((ids: number[], conv) => {
+      return [...ids, ...conv.messages.map((m) => m.id)];
+    }, []);
     if (!messagesIDs.length) return [];
     const promises = messagesIDs.map((messageID) => {
       return this._prisma.delivery.create({
@@ -195,7 +192,7 @@ export default class ChatDataSource {
         },
       },
     });
-    const messagesIDs: number[] = result[0].messages.map((m: Message) => m.id);
+    const messagesIDs: number[] = result[0].messages.map((m) => m.id);
     if (!messagesIDs.length) return [];
     const date = new Date();
     const promises = messagesIDs.map((messageID) => {
@@ -219,9 +216,9 @@ export default class ChatDataSource {
   ): Conversation {
     return {
       id: conversation.id,
-      type: conversation.type,
+      type: ConversationType[conversation.type],
       participants: conversation.participants
-        .filter((p: User) => p.id != currentUserID)
+        .filter((p) => p.id != currentUserID)
         .map((p: any) => UserDataSource._getGraphQLUser(p.user!)),
       messages: conversation.messages.map(ChatDataSource._getMessage).reverse(),
       canChat: true,
@@ -255,7 +252,7 @@ export default class ChatDataSource {
 
   static _getMedia(media: PrismaMedia): Media {
     return {
-      type: media.type,
+      type: MediaType[media.type],
       url: media.url,
       thumbUrl: media.thumbUrl ?? undefined,
     };

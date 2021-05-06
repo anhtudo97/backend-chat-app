@@ -5,7 +5,7 @@ export class AuthUser {
   @Field({ nullable: true })
   displayName?: string;
   @Field({ nullable: true })
-  photoURL?: string;
+  photoUrl?: string;
 }
 
 @ObjectType()
@@ -19,5 +19,5 @@ export class LoginResponse {
 @InputType()
 export class LoginInput {
   @Field()
-  token!: string;
+  token!: String;
 }

@@ -8,8 +8,8 @@ import FileUtils from "./utils/file-utils";
 import FriendDataSource from "../features/friend/data/friend-data-source";
 import BadgeDataSource from "../features/badge/data/badge-data-source";
 import NotificationDataSource from "../features/notification/data/notification-data-source";
-// import BlockDataSource from "../features/block/data/block-data-source";
-// import ChatDataSource from "../features/chat/data/chat-data-source";
+import BlockDataSource from "../features/block/data/block-data-source";
+import ChatDataSource from "../features/chat/data/chat-data-source";
 import { ExecutionParams } from "subscriptions-transport-ws";
 
 type Context = {
@@ -31,10 +31,10 @@ export type DataSources = {
   userDS: UserDataSource;
   authDS: AuthDataSource;
   friendDS: FriendDataSource;
-  // blockDS: BlockDataSource,
+  blockDS: BlockDataSource;
   badgeDS: BadgeDataSource;
   notificationDS: NotificationDataSource;
-  // chatDS: ChatDataSource
+  chatDS: ChatDataSource;
 };
 
 export type Validators = {

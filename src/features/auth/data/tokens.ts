@@ -10,13 +10,13 @@ export class Tokens {
     this._signer = signer;
   }
 
-  genrateAccessToken(userID: string) {
+  generateAccessToken(userID: string) {
     return this._signer.sign({ userID }, process.env.ACCESS_TOKEN_SECRET!, {
       expiresIn: "30m",
     });
   }
 
-  genrateRefreshToken(userID: string) {
+  generateRefreshToken(userID: string) {
     return this._signer.sign({ userID }, process.env.REFRESH_TOKEN_SECRET!);
   }
 
