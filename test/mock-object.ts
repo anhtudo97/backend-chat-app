@@ -128,3 +128,98 @@ export const mockBlock: Block = {
   user: UserDataSource._getGraphQLUser(mockPrismaBlock.blocked.user),
   date: mockPrismaBlock.date,
 };
+
+const conversationID = 321;
+const messageId = 123;
+
+export const mockPrismaConversation: PrismaConversation = {
+  id: conversationID,
+  type: PrismaConversationType.ONE_TO_ONE,
+  updatedAt: new Date(),
+  createdAt: new Date(),
+};
+
+export const mockPrismaMedia: PrismaMedia = {
+  id: 191,
+  messageID: messageId,
+  type: PrismaMediaType.IMAGE,
+  url: "https://picsum.org/420x69",
+  thumbUrl: "https://picsum.org/420x69",
+};
+
+export const mockFullPrismaMessage: FullPrismaMessage = {
+  id: messageId,
+  conversationID: mockPrismaConversation.id,
+  senderID: mockPrismaAuthUser.id,
+  text: "hello world",
+  sentAt: new Date(),
+  medias: [mockPrismaMedia],
+  deliveries: [
+    {
+      messageID: messageId,
+      userID: mockPrismaAuthUser.id,
+      type: PrismaDeliveryType.SEEN,
+      date: new Date(),
+    },
+    {
+      messageID: messageId,
+      userID: mockPrismaAuthUser.id,
+      type: PrismaDeliveryType.DELIVERED,
+      date: new Date(),
+    },
+  ],
+};
+
+export const mockFullPrismaConversation: FullPrismaConversation = {
+  ...mockPrismaConversation,
+  participants: [
+    {
+      ...mockPrismaAuthUser,
+      user: mockPrismaUser,
+    },
+  ],
+  messages: [{ ...mockFullPrismaMessage, medias: [mockPrismaMedia] }],
+};
+
+export const mockMedia: Media = {
+  type: MediaType[mockPrismaMedia.type],
+  url: mockPrismaMedia.url,
+  thumbUrl: mockPrismaMedia.url ?? undefined,
+};
+
+export const mockMessage: Message = {
+  id: mockFullPrismaMessage.id,
+  conversationID: mockFullPrismaMessage.conversationID,
+  senderID: mockFullPrismaMessage.senderID,
+  text: mockFullPrismaMessage.text ?? undefined,
+  medias: [mockMedia],
+  sentAt: mockFullPrismaMessage.sentAt,
+  deliveredTo: mockFullPrismaMessage.deliveries
+    .filter((d) => d.type == PrismaDeliveryType.DELIVERED)
+    .map((d) => ({ userID: d.userID, date: d.date })),
+  seenBy: mockFullPrismaMessage.deliveries
+    .filter((d) => d.type == PrismaDeliveryType.SEEN)
+    .map((d) => ({ userID: d.userID, date: d.date })),
+};
+
+export const mockConversation: Conversation = {
+  id: mockFullPrismaConversation.id,
+  type: ConversationType[mockFullPrismaConversation.type],
+  participants: [mockGraphQLUser],
+  messages: [mockMessage],
+  canChat: true,
+};
+
+export const mockTyping: Typing = {
+  conversationID: mockConversation.id,
+  userID: mockPrismaUser.authUserID,
+  started: true,
+};
+
+export const mockTheDate = (): [jest.SpyInstance, Date] => {
+  const mocked = new Date();
+  const spy = jest
+    .spyOn(global, "Date")
+    .mockImplementation(() => (mocked as unknown) as string);
+  return [spy, mocked];
+};
