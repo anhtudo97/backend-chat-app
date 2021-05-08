@@ -76,3 +76,55 @@ export const mockAuthProviderUser: AuthProviderUser = {
   displayName: "Provider User",
   photoURL: "https://provider.com/photo.png",
 };
+
+export const mockCreateUserArgs: CreateUserArgs = {
+  authUserID: "authUserID",
+  username: "username",
+  name: "name",
+};
+
+export const mockFriend: PrismaFriend = {
+  id: 0,
+  user1ID: "user1ID",
+  user2ID: "user2ID",
+  confirmed: false,
+  date: new Date(),
+};
+
+export const mockFriendship: Friendship = {
+  status: FriendshipStatus.FRIENDS,
+  date: new Date(),
+};
+
+export const mockPrismaBadges: PrismaBadge[] = [
+  {
+    userID: "USERIDDDD",
+    badgeName: BadgeName.FRIEND_REQUESTS,
+    lastOpened: new Date(),
+  },
+  {
+    userID: "USERIDDDD",
+    badgeName: BadgeName.NOTIFICATIONS,
+    lastOpened: new Date(),
+  },
+];
+
+type PrismaBlockWithUser = PrismaBlock & {
+  blocked: PrismaAuthUser & { user: PrismaUser };
+};
+
+export const mockPrismaBlock: PrismaBlockWithUser = {
+  id: 1231,
+  blockingID: "blockingID",
+  blockedID: "blockedID",
+  blocked: {
+    ...mockPrismaAuthUser,
+    user: mockPrismaUser,
+  },
+  date: new Date(),
+};
+
+export const mockBlock: Block = {
+  user: UserDataSource._getGraphQLUser(mockPrismaBlock.blocked.user),
+  date: mockPrismaBlock.date,
+};
