@@ -20,10 +20,10 @@ describe("getGoogleUser", () => {
     const response = { data: googleUser } as AxiosResponse;
     when(MockAxios.get(anything())).thenResolve(response);
 
-    //act
+    // act
     const result = await googleAPI.getGoogleUser(token);
 
-    //assert
+    // assert
     verify(MockAxios.get(`${GoogleAPI.GOOGLE_API_URL}${token}`)).once();
     const expected: AuthProviderUser = {
       email: googleUser.email,

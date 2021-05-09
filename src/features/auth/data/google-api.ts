@@ -13,14 +13,13 @@ export default class GoogleAPI {
   }
 
   async getGoogleUser(token: string): Promise<AuthProviderUser> {
-    const response = await this._axios.get(`
-    ${GoogleAPI.GOOGLE_API_URL}${token}`);
-
+    const response = await this._axios.get(
+      `${GoogleAPI.GOOGLE_API_URL}${token}`
+    );
     const data = response.data;
-
     return {
       email: data.email,
-      displayName: data.displayName,
+      displayName: data.name,
       photoURL: data.picture.replace("s96-c", "s500-c"),
     };
   }
