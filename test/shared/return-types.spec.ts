@@ -9,16 +9,16 @@ import {
   returnsLoginResponse,
   returnsString,
   returnsUser,
-} from "../../../src/shared/graphql/return-types";
-import { LoginResponse } from "../../../src/features/auth/graphql/types";
-import { User } from "../../../src/features/user/graphql/types";
+} from "../../src/shared/graphql/return-types";
+import { LoginResponse } from "../../src/features/auth/graphql/types";
+import { User } from "../../src/features/user/graphql/types";
 import { GraphQLUpload } from "graphql-upload";
 import {
   FriendRequests,
   Friendship,
   FriendshipInfo,
   FriendshipStatus,
-} from "../../../src/features/friend/graphql/types";
+} from "../../src/features/friend/graphql/types";
 
 test("returnsString", () => {
   expect(returnsString()).toBe(String);
